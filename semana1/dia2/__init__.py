@@ -1,0 +1,3 @@
+# Documento de inicio....
+# Ledecimoa a python que la carpeta  es un conjunto
+#de archivos a necesitar para nuestro programa
