@@ -1,13 +1,11 @@
 const { DataTypes } = require('sequelize');
-
 const cabecera_venta_model = (conexion) => {
     return conexion.define('cabeceraVentas', {
         cabeceraVentaId: {
             type: DataTypes.INTEGER,
             primaryKey: true,
             autoIncrement: true,
-            field: 'cabventa_id',
-            allowNull: false
+            field: 'cabventa_id'
         },
         cabeceraVentaFecha: {
             type: DataTypes.DATEONLY,
@@ -23,11 +21,11 @@ const cabecera_venta_model = (conexion) => {
             type: DataTypes.DECIMAL(6,2),
             field: 'cabventa_igv',
             allowNull: false
-        }
-    },{
+        },
+        // columna : DataTypes.INTEGER
+    }, {
         tableName: 't_cabventa',
-        timestamps: false,
+        timestamps: false
     })
 }
-
 module.exports = cabecera_venta_model;

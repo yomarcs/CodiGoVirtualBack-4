@@ -1,7 +1,7 @@
 const { DataTypes } = require('sequelize');
 
 const imagen_model = (conexion) => {
-    return conexion.define('imagenes',{
+    return conexion.define('imagenes', {
         imagenId: {
             primaryKey: true,
             field:'imagen_id',
@@ -12,11 +12,10 @@ const imagen_model = (conexion) => {
             type: DataTypes.TEXT,
             field: 'imagen_url',
             allowNull: false
-        },
+        }
     },{
         tableName: 't_imagen',
         timestamps: false
     })
 }
-
-module.exports = imagen_model;  
+module.exports = imagen_model;

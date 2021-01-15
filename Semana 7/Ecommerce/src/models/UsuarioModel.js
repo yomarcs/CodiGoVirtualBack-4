@@ -1,65 +1,62 @@
 const { DataTypes } = require('sequelize');
 
 const usuario_model = (conexion) => {
-    let usuario =  conexion.define('usuarios',{
+    let usuario = conexion.define('usuarios', {
         usuarioId: {
-            primaryKey :true,
+            primaryKey: true,
             autoIncrement: true,
             type: DataTypes.INTEGER,
-            field: 'usuaio_id'
+            field: "usuario_id",
         },
         usuarioCorreo: {
-            // https://sequelize.org/master/manual/validations-and-constraints.html#validators
-            type: DataTypes.STRING(40),
-            field: 'usuario_correo',
+            type: DataTypes.STRING(30),
+            field:"usuario_correo",
             unique: true,
             allowNull: false,
+            // https://sequelize.org/master/manual/validations-and-constraints.html#validators
             validate:{
-                len: [10,30],
                 isEmail: true,
                 isAlphanumeric: true,
-            }
-
+                len: [10, 30],
+            },
         },
         usuarioNombre: {
             type: DataTypes.STRING(45),
-            field: 'usuario_nombre',
+            field: "usuario_nombre",
             unique: true,
             allowNull: false
         },
         usuarioDireccion: {
-            type: DataTypes.STRING(255),
-            field: 'usuario_direccion',
-            allowNull: false
+            type: DataTypes.STRING(40),
+            field: "usuario_direccion"
         },
         usuarioTelefono: {
+            field: "usuario_telefono",
             type: DataTypes.STRING(10),
             unique: true,
             validate: {
                 isNumeric: true,
-                min: 9000000000,
-                max: 9999999999
+                min: 900000000,
+                max: 999999999
             }
         },
         usuarioHash: {
-            field: 'usuario_hash',
+            field: "usuario_hash",
             type: DataTypes.TEXT
         },
         usuarioSalt: {
-            field: 'usuario_salt',
+            field: "usuario_salt",
             type: DataTypes.TEXT
         },
         usuarioFechaNacimiento: {
-            field: 'usuario_fecha_nacimiento',
+            field: "usuario_fecha_nacimiento",
             type: DataTypes.DATEONLY
         }
-    },{
-        tableName: 't_usuario',
+    }, {
+        tableName: "t_usuario",
         timestamps: false
-    })
-
-    // creamos y retornamos usuario pq aqui ira la incriptacion de la contraseña
+    });
+    // va a ir la encriptacion de la contraseña
     return usuario;
 }
-
 module.exports = usuario_model;

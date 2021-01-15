@@ -13,10 +13,9 @@ const carrito_model = (conexion) => {
             type: DataTypes.INTEGER,
             allowNull: false
         }
-    },{
+    }, {
         tableName: 't_carrito',
         timestamps: false
     })
 }
-
 module.exports = carrito_model;

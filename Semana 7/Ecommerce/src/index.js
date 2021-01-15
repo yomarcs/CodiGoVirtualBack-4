@@ -1,4 +1,3 @@
-const Server = require('./config/Server.js');
-
-const miServidor = new Server()
-miServidor.start();
+const Server = require('./config/Server');
+const server = new Server();
+server.start();

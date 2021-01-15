@@ -2,7 +2,7 @@ const { DataTypes } = require('sequelize');
 
 const almacen_model = (conexion) => {
     return conexion.define('almacenes', {
-        almacenId:{
+        almacenId: {
             type: DataTypes.INTEGER,
             allowNull: false,
             unique: true,
@@ -11,21 +11,20 @@ const almacen_model = (conexion) => {
             primaryKey: true
         },
         almacenDireccion: {
-            field:'almacen_direccion',
-            type: DataTypes.STRING(255)
+            field: 'almacen_direccion',
+            type: DataTypes.STRING(45)
         },
-        almacenLatitud:{
+        almacenLatitud: {
             type: DataTypes.DECIMAL(8, 6),
             field: 'almacen_latitud'
         },
-        almacenLongitud:{
+        almacenLongitud: {
             type: DataTypes.DECIMAL(8, 6),
             field: 'almacen_longitud'
         }
-    },{
+    }, {
         tableName: 't_almacen',
         timestamps: false
     })
 }
-
 module.exports = almacen_model;

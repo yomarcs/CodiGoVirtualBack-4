@@ -1,4 +1,4 @@
-const Sequelize = require('sequelize');
+const { Sequelize } = require('sequelize');
 const almacen_model = require('../models/AlmacenModel');
 const cabecera_venta_model = require('../models/CabeceraVentaModel');
 const carrito_model = require('../models/CarritoModel');
@@ -7,25 +7,21 @@ const detalle_venta_model = require('../models/DetalleVentaModel');
 const imagen_model = require('../models/ImagenModel');
 const lista_deseo_model = require('../models/ListaDeseoModel');
 const producto_model = require('../models/ProductoModel');
-const porducto_model = require('../models/ProductoModel');
 const usuario_model = require('../models/UsuarioModel');
-
-
+// CREATE DATABASE ecommerce_virtual4;
 const conexion = new Sequelize(
-    // "nombreBD", "usuario", "contraseña"
-    "ecommerce_virtual4","root","&&YomarCs84&&",{
-        host: "127.0.0.1",
-        port: "3306",
-        dialect: "mysql",
-        timezone: "-05:00",
-        logging: false,
-        dialectOptions: {
-            dateStrings: true,
-        }
+    "ecommerce_virtual4", "root", "&&YomarCs84&&", {
+    host: "127.0.0.1",
+    port: "3306",
+    dialect: "mysql",
+    timezone: "-05:00",
+    logging: false,
+    dialectOptions: {
+        dateStrings: true
     }
+}
 );
-
-// Aqui se crea las tablas en la base de datos
+// Se crean las tablas en la base de datos
 const Almacen = almacen_model(conexion);
 const CabeceraVenta = cabecera_venta_model(conexion);
 const Carrito = carrito_model(conexion);
@@ -36,39 +32,39 @@ const ListaDeseo = lista_deseo_model(conexion);
 const Producto = producto_model(conexion);
 const Usuario = usuario_model(conexion);
 
-// Aqui creamos las relaciones
-Categoria.hasMany(Producto,{ foreignKey: 'categoria_id' });
-Producto.belongsTo(Categoria,{ foreignKey: 'categoria_id'});
+// crear las relaciones
+Categoria.hasMany(Producto, { foreignKey: {name:'categoria_id', allowNull: false} });
+Producto.belongsTo(Categoria, { foreignKey: 'categoria_id' });
 
-Almacen.hasMany( Producto, { foreignKey: 'almacen_id'});
-Producto.belongsTo(Almacen, {foreignKey: 'almacen_id'});
+Almacen.hasMany(Producto, { foreignKey: {name:'almacen_id', allowNull: false} });
+Producto.belongsTo(Almacen, { foreignKey: 'almacen_id' });
 
-Usuario.hasMany( CabeceraVenta, { foreignKey: 'usuario_id'});
-CabeceraVenta.belongsTo(Usuario, {foreignKey: 'usuario_id'});
+Usuario.hasMany(CabeceraVenta, { foreignKey: {name:'usuario_id', allowNull: false} });
+CabeceraVenta.belongsTo(Usuario, { foreignKey: 'usuario_id' });
 
-CabeceraVenta.hasMany( DetalleVenta, { foreignKey: 'cabventa_id'});
-DetalleVenta.belongsTo(CabeceraVenta, {foreignKey: 'cabventa_id'});
+CabeceraVenta.hasMany(DetalleVenta, { foreignKey: {name: 'cabventa_id', allowNull: false} });
+DetalleVenta.belongsTo(CabeceraVenta, { foreignKey: 'cabventa_id' });
 
-Producto.hasMany( DetalleVenta, { foreignKey: 'producto_id'});
-DetalleVenta.belongsTo(Producto, {foreignKey: 'producto_id'});
+Producto.hasMany(DetalleVenta, { foreignKey: {name:'producto_id', allowNull: false} });
+DetalleVenta.belongsTo(Producto, { foreignKey: 'producto_id' });
+// EJERCICIO
+Imagen.hasMany(Usuario, {foreignKey:'imagen_id'});
+Usuario.belongsTo(Imagen,{foreignKey:'imagen_id'});
 
-Imagen.hasMany( Producto, { foreignKey: 'imagen_id'});
-Producto.belongsTo(Imagen, {foreignKey: 'imagen_id'});
+Imagen.hasMany(Producto, {foreignKey:'imagen_id'});
+Producto.belongsTo(Imagen,{foreignKey:'imagen_id'});
 
-Imagen.hasMany( Usuario, { foreignKey: 'imagen_id'});
-Usuario.belongsTo(Imagen, {foreignKey: 'imagen_id'});
+Producto.hasMany(Carrito, {foreignKey: {name:'producto_id', allowNull: false}});
+Carrito.belongsTo(Producto,{foreignKey:'producto_id'});
 
-Producto.hasMany( Carrito, { foreignKey: 'producto_id'});
-Carrito.belongsTo(Producto, {foreignKey: 'producto_id'});
+Usuario.hasMany(Carrito, {foreignKey:{name:'usuario_id', allowNull: false}});
+Carrito.belongsTo(Usuario,{foreignKey:'usuario_id'});
 
-Usuario.hasMany( Carrito, { foreignKey: 'usuario_id'});
-Carrito.belongsTo(Usuario, {foreignKey: 'usuario_id'});
+Producto.hasMany(ListaDeseo, {foreignKey:{name:'producto_id', allowNull: false}});
+ListaDeseo.belongsTo(Producto,{foreignKey:'producto_id'});
 
-Producto.hasMany( ListaDeseo, { foreignKey: 'producto_id'});
-ListaDeseo.belongsTo(Producto, {foreignKey: 'producto_id'});
-
-Usuario.hasMany( ListaDeseo, { foreignKey: 'usuario_id'});
-ListaDeseo.belongsTo(Usuario, {foreignKey: 'usuario_id'});
+Usuario.hasMany(ListaDeseo, {foreignKey:{name:'usuario_id', allowNull: false}});
+ListaDeseo.belongsTo(Usuario,{foreignKey:'usuario_id'});
 
 module.exports = {
     conexion: conexion,
