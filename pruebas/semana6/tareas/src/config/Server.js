@@ -23,9 +23,6 @@ class Server{
             res.status(200).send('La API funciona correctamente');
         });
         this.app.use('',tareasRouter);
-        
-        
-
     }
 
     start(){

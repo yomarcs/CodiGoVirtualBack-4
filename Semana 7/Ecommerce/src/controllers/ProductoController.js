@@ -5,7 +5,7 @@ const crearProducto = (req, res) => {
     return res.status(201).json({
       ok: true,
       content: productoCreado,
-      message: null,
+      message: "Producto creado exitosamente",
     });
   }).catch(error=>res.status(500).json({
       ok: false,
@@ -14,6 +14,15 @@ const crearProducto = (req, res) => {
   }));
 };
 
+const listarProducto = (req,res)=>{
+  Producto.findAll().then(productos=>res.json({
+    ok:true,
+    content: productos,
+    message: null
+  }))
+}
+
 module.exports = {
   crearProducto,
+  listarProducto,
 };

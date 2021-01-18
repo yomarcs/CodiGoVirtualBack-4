@@ -6,7 +6,9 @@ const fs = require("fs");
 // path => sirve para devolver archivos del servidor
 // https://nodejs.org/api/path.html
 const path = require("path");
-
+function validarImagen(archivos){
+  //...
+}
 const subirImagen = async (req, res) => {
   try {
     //   console.log(req.files.imagen); // maneja todo el tratamiento de archivos mandados por el front
@@ -14,7 +16,7 @@ const subirImagen = async (req, res) => {
     // permitir SOLAMENTE la subida de imagenes
     // https://developer.mozilla.org/es/docs/Web/JavaScript/Referencia/Objetos_globales/String/includes
     // if (imagen && imagen.type.split('/')[0]==="image") {
-    if (imagen && imagen.type.includes('image')) {
+    if (imagen && imagen.type.includes("image")) {
       let ruta = imagen.path; // ruta del archivo
       // separar la ruta y solamente quedarme con el nombre del archivo
       let nombreArchivo = ruta.split("\\")[2];
@@ -29,11 +31,11 @@ const subirImagen = async (req, res) => {
     } else {
       let llave = Object.keys(req.files)[0];
       if (llave) {
-          let ruta =req.files[llave].path;
-          // eliminar ese archivo del servidor
-          fs.unlink(ruta,(errorEliminacion)=>{
-              console.log(errorEliminacion);
-          });
+        let ruta = req.files[llave].path;
+        // eliminar ese archivo del servidor
+        fs.unlink(ruta, (errorEliminacion) => {
+          console.log(errorEliminacion);
+        });
       }
       return res.status(404).json({
         ok: false,
@@ -42,40 +44,75 @@ const subirImagen = async (req, res) => {
       });
     }
   } catch (error) {
-      return res.status(500).json({
-          ok: false,
-          content: error,
-          message: 'Hubo un error la registrar la imagen'
-      })
+    return res.status(500).json({
+      ok: false,
+      content: error,
+      message: "Hubo un error la registrar la imagen",
+    });
   }
 };
 
-const devolverImagenPorId = async(req, res)=>{
-    let {id} = req.params;
-    let imagen = await Imagen.findByPk(id);
-    if(imagen){
-        // console.log(imagen);
-        let ruta = `src/multimedia/${imagen.imagenURL}`;
-        let rutaDefault = `src/multimedia/default.jpg`;
-        // verifica si existe ese archivo en el proyecto, y retorna True si existe y False si no existe
-        console.log(fs.existsSync(ruta));
-        if(fs.existsSync(ruta)){
-            // resolve sirve para mostrar el archivo
-            // sendFile => sirve para mandar al cliente (front) un archivo y solamente un archivo, sin campos adicionales
-            return res.sendFile(path.resolve(ruta));
-        }else{
-            return res.sendFile(path.resolve(rutaDefault));
-        }
-    }else{
-        return res.status(404).json({
-            ok: false,
-            content: null,
-            message: 'No existe esa imagen'
-        })
+const devolverImagenPorId = async (req, res) => {
+  let { id } = req.params;
+  let imagen = await Imagen.findByPk(id);
+  if (imagen) {
+    // console.log(imagen);
+    let ruta = `src/multimedia/${imagen.imagenURL}`;
+    let rutaDefault = `src/multimedia/default.jpg`;
+    // verifica si existe ese archivo en el proyecto, y retorna True si existe y False si no existe
+    console.log(fs.existsSync(ruta));
+    if (fs.existsSync(ruta)) {
+      // resolve sirve para mostrar el archivo
+      // sendFile => sirve para mandar al cliente (front) un archivo y solamente un archivo, sin campos adicionales
+      return res.sendFile(path.resolve(ruta));
+    } else {
+      return res.sendFile(path.resolve(rutaDefault));
     }
-}
+  } else {
+    return res.status(404).json({
+      ok: false,
+      content: null,
+      message: "No existe esa imagen",
+    });
+  }
+};
+
+const actualizarImagen = async (req, res) => {
+  // actualizar la imagen tanto en la bd con en el servidor
+  let { id } = req.params;
+  let { imagen }= req.files;
+  // primero busco esa imagen segun su PK en la bd
+  let imagenEncontrada = await Imagen.findByPk(id);
+  if (imagenEncontrada) {
+    let ruta = `src/multimedia/${imagenEncontrada.imagenURL}`;
+    // la siguiente condicional solamente sirve para ver  si existe el archivo en el servidor, sea si existe o no existe, igual tenemos que actualizar el nombre del archivo en la bd
+    if (fs.existsSync(ruta)) {
+      let rpta = fs.unlinkSync(ruta);
+      console.log(rpta);
+    }
+    let nombreArchivo = imagen.path.split("\\")[2];
+    await Imagen.update({imagenURL: nombreArchivo},{
+      where:{
+        imagenId: id
+      }
+    });
+    imagenEncontrada = await Imagen.findByPk(id);
+    return res.json({
+      ok: true,
+      content: imagenEncontrada,
+      message:'Imagen actualizada con exito'
+    });
+  } else {
+    return res.status(404).json({
+      ok: false,
+      content: null,
+      message: "No existe esa imagen",
+    });
+  }
+};
 
 module.exports = {
   subirImagen,
-  devolverImagenPorId
+  devolverImagenPorId,
+  actualizarImagen,
 };

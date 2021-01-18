@@ -5,6 +5,8 @@ const categoria_router = require("../routes/CategoriaRoutes");
 const almacen_router = require("../routes/AlmacenRoutes");
 const producto_router = require("../routes/ProductoRoutes");
 const imagen_router = require("../routes/ImagenRoutes");
+const usuario_router = require("../routes/UsuarioRoutes");
+
 module.exports = class Server {
   constructor() {
     this.app = express();
@@ -33,13 +35,16 @@ module.exports = class Server {
     this.app.use("", almacen_router);
     this.app.use("", producto_router);
     this.app.use("", imagen_router);
+    this.app.use("", usuario_router);
   }
   start() {
     this.app.listen(this.puerto, () => {
       console.log(
         `Servidor corriendo exitosamente en el puerto ${this.puerto}`
       );
-      conexion.sync({force:true}).then(() => {
+      conexion
+        .sync()
+        .then(() => {
           console.log("Base de datos sincronizada exitosamente");
         })
         .catch((error) => {
